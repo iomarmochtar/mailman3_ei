@@ -1,0 +1,11 @@
+*.swp
+*.pyc
+conda/*
+nodejs/*
+var/*
+etc/nginx/certs/*
+misc/thd/*
+webui/webui/settings_local.py
+webui/webui/webui.db
+webui/webui/static/*
+webui/webui/settings_secret.py
