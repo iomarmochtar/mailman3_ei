@@ -1,12 +1,12 @@
 Mailman3 Easy Install
 ---------------------
 
-This repo aims to make installation for mailman3 and it's web dashboard management (Hyperkitty & Postorious) easy for Centos (or redhat-like OS).
+This repo aims to make mailman3 core, hyperkitty (mail archiver) and postorius (web admin dashboard) installation easy for Centos (or redhat-like OS).
 
 
 Thanks to Conda project (https://conda.io) to make multiversion python installation easy (and fun).
 
-Tested in:
+Has been tested in:
 - Centos 6.9 (fresh installation)
 - Centos 7 (fresh installation)
 
