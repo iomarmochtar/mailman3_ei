@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-__author__ = ('Imam Omar Mochtar', ('iomarmochtar@gmail.com'))
+__author__ = ('Imam Omar Mochtar', ('iomarmochtar@gmail.com',))
 
 """
 Easy install for mailman3 core and web admin dashboard (postorious & hyperkitty)
@@ -54,21 +54,21 @@ def prompt(txt):
     print("%s %s"%("="*15, txt))
 
 def main():
-   
-    if not os.path.isdir(BASE_PATH):
-        print("Repo directory %s not found, you may close the repo to destinated folder"%BASE_PATH)
-        print("git clone %s %s"%(MAILMAN3EI_REPO, BASE_PATH))
-        sys.exit(1)
- 
+
     print("Log file %s"%LOG_FILE)
- 
+
     # install required packages
     prompt("Make sure epel repo has been installed")
     runCmd("yum install -y epel-release")
 
     prompt("Installing required packages (%s)"%REQ_PACKAGES)
     runCmd("yum install -y %s"%REQ_PACKAGES)
-
+  
+    # close repository directly if not exist 
+    if not os.path.isdir(BASE_PATH):
+        prompt("Repo directory %s not found, do clone repository"%BASE_PATH)
+        runCmd("git clone %s %s"%(MAILMAN3EI_REPO, BASE_PATH))
+ 
     # create temp dir
     prompt("Creating temporary (%s)"%TEMP_DIR)
     runCmd("mkdir -p %s"%TEMP_DIR)
