@@ -33,3 +33,7 @@ Run installation script
 python /opt/mailman3/install_me.py
 ```
 
+Postorious will listening in port 9090, so make sure firewall/iptables not blocked this port.
+
+you can see my blog post for any posinstallation guide.
+https://iomarmochtar.wordpress.com/2017/07/21/mailman3-easy-installation/
