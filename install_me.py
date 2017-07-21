@@ -24,15 +24,11 @@ MAILMAN3EI_REPO = "https://github.com/iomarmochtar/mailman3_ei"
 DELAY = 1
 LOG_FILE = tempfile.mktemp()
 
-def _print(txt):
-    sys.stdout.write("%s\n"%txt)
-    sys.stdout.flush()
-
 def runCmd(cmd, ignore=False):
     """
     runCmdute system command
     """
-    _print("Running command: %s"%cmd)
+    print("Running command: %s"%cmd)
 
     kwargs = dict(universal_newlines=True, shell=True,
         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -40,7 +36,7 @@ def runCmd(cmd, ignore=False):
     cmd = "%s >> %s 2>&1"%(cmd, LOG_FILE)
     output, err = subprocess.Popen(cmd, **kwargs).communicate()
     if not ignore and err:
-        _print("Error detected, see log file %s for more information"%LOG_FILE)
+        print("Error detected, see log file %s for more information"%LOG_FILE)
         open(LOG_FILE, 'aw').write(err)
         #sys.stderr.write("%s [ERROR]\n"%err)
         sys.exit(1)
@@ -55,16 +51,16 @@ def gen_secret():
     return repr(''.join([random.SystemRandom().choice(uni) for i in range(random.randint(45,50))]))
 
 def prompt(txt):
-    _print("%s %s"%("="*15, txt))
+    print("%s %s"%("="*15, txt))
 
 def main():
    
     if not os.path.isdir(BASE_PATH):
-        _print("Repo directory %s not found, you may close the repo to destinated folder"%BASE_PATH)
-        _print("git clone %s %s"%(MAILMAN3EI_REPO, BASE_PATH))
+        print("Repo directory %s not found, you may close the repo to destinated folder"%BASE_PATH)
+        print("git clone %s %s"%(MAILMAN3EI_REPO, BASE_PATH))
         sys.exit(1)
  
-    _print("Log file %s"%LOG_FILE)
+    print("Log file %s"%LOG_FILE)
  
     # install required packages
     prompt("Make sure epel repo has been installed")
@@ -148,9 +144,9 @@ def main():
         runCmd("cp %s %s"%(src, tgt))
 
 
-    _print("[DONE]")
+    print("[DONE]")
     cmd_admin = "%s %s createsuperuser"%(py2, webui_manage)
-    _print("""You may create admin user by running following command
+    print("""You may create admin user by running following command
 %s
 
 to run mailman3 services:
