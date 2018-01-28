@@ -5,8 +5,6 @@ atpublic==0.5
 certifi==2017.4.17
 cffi==1.10.0
 chardet==3.0.4
-conda==4.3.21
-cryptography==1.8.1
 decorator==4.0.11
 dnspython==1.15.0
 falcon==1.2.0
@@ -30,7 +28,6 @@ pexpect==4.2.1
 pickleshare==0.7.4
 prompt-toolkit==1.0.14
 ptyprocess==0.5.2
-pycosat==0.6.2
 pycparser==2.17
 Pygments==2.2.0
 pyOpenSSL==17.0.0
@@ -39,7 +36,6 @@ python-dateutil==2.6.1
 python-editor==1.0.3
 python-mimeparse==1.6.0
 requests==2.18.1
-setupfiles==0.0.50
 simplegeneric==0.8.1
 six==1.10.0
 SQLAlchemy==1.1.11
