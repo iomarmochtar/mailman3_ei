@@ -14,8 +14,7 @@ set -a
 APP_NAME="mailman3"
 BASE_DIR="/opt/mailman3"
 PID_FILE="$BASE_DIR/var/master.pid"
-MAILMAN_BIN="$BASE_DIR/conda/bin/mailman"
-MAILMAN="$MAILMAN_BIN -C $BASE_DIR/etc/mailman.cfg"
+MAILMAN="$BASE_DIR/bin/mailman"
 
 # remove this if you manage number of open files in some other fashion
 ulimit -n 96000
@@ -46,7 +45,7 @@ running()
     [ ! -f "$PID_FILE" ] && return 1
     # Obtain the pid and check it against the binary name
     pid=`cat $PID_FILE`
-    running_pid $pid $MAILMAN_BIN || return 1
+    running_pid $pid $MAILMAN || return 1
     return 0
 }
 

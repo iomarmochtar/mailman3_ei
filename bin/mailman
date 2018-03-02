@@ -1,0 +1,5 @@
+#!/bin/bash
+
+export MAILMAN_CONFIG_FILE=/opt/mailman3/etc/mailman.cfg
+
+/opt/mailman3/conda/bin/mailman $@
