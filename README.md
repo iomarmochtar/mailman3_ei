@@ -7,7 +7,6 @@ This repo aims to make mailman3 core, hyperkitty (mail archiver) and postorius (
 Thanks to Conda project (https://conda.io) to make multiversion python installation easy (and fun).
 
 Has been tested in:
-- Centos 6.9 (fresh installation)
 - Centos 7 (fresh installation)
 
 

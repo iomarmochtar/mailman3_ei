@@ -16,7 +16,7 @@ from time  import sleep
 
 
 BASE_PATH = "/opt/mailman3"
-REQ_PACKAGES = "wget git-core gcc bzip2 xz gcc-c++ nginx openssl"
+REQ_PACKAGES = "wget git-core gcc bzip2 xz gcc-c++ nginx openssl supervisor"
 MINICONDA_URL = "https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh"
 MINICONDA_PATH = os.path.join(BASE_PATH, "conda")
 TEMP_DIR = "/root/mailman3_setup"
@@ -66,7 +66,7 @@ def main():
   
     # close repository directly if not exist 
     if not os.path.isdir(BASE_PATH):
-        prompt("Repo directory %s not found, do clone repository"%BASE_PATH)
+        prompt("Repo directory %s not found, do cloning repository"%BASE_PATH)
         runCmd("git clone %s %s"%(MAILMAN3EI_REPO, BASE_PATH))
  
     # create temp dir
@@ -93,7 +93,7 @@ def main():
     conda_bin = os.path.join(MINICONDA_PATH, "bin/conda")
     prompt("Create mailman3_core and mailman3_ext virtual environment")
     runCmd("%s create --name mailman3_core -y"%conda_bin)
-    runCmd("%s create --name mailman3_ext python=2 -y"%conda_bin)
+    runCmd("%s create --name mailman3_ext python=3 -y"%conda_bin)
 
     # python libs for core and ext
     prompt("Installing required python libs")
@@ -135,7 +135,8 @@ def main():
 
     # Installing init script
     prompt("Installing int script for mailman3 core and webui")
-    inits = ["mailman3", "mailman3_webui"]
+    #inits = ["mailman3", "mailman3_webui"]
+    inits = ["mailman3"]
     for _init in inits:
         tgt = "/etc/init.d/%s"%_init
         if os.path.isfile(tgt):
@@ -143,6 +144,8 @@ def main():
         src = os.path.join(BASE_PATH, "misc/%s_init"%_init)
         runCmd("cp %s %s"%(src, tgt))
 
+    webui_services_path = os.path.join(BASE_PATH, "etc/supervisor/services")
+    runCmd("cp %s/*.ini /etc/supervisord.d/"%(webui_services_path))
 
     print("[DONE]")
     cmd_admin = "%s %s createsuperuser"%(py2, webui_manage)
@@ -151,8 +154,7 @@ def main():
 
 to run mailman3 services:
 service mailman3 start
-service mailman3_webui start
-
+systemctl start supervisord
 
 Further more please read mailman3 documentation (http://docs.mailman3.org/en/latest/)
 
