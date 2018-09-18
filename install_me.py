@@ -17,7 +17,7 @@ from time  import sleep
 
 BASE_PATH = "/opt/mailman3"
 REQ_PACKAGES = "wget git-core gcc bzip2 xz gcc-c++ nginx openssl supervisor"
-MINICONDA_URL = "https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh"
+MINICONDA_URL = "https://repo.continuum.io/miniconda/Miniconda3-4.5.1-Linux-x86_64.sh"
 MINICONDA_PATH = os.path.join(BASE_PATH, "conda")
 TEMP_DIR = "/root/mailman3_setup"
 MAILMAN3EI_REPO = "https://github.com/iomarmochtar/mailman3_ei"
@@ -93,17 +93,17 @@ def main():
     conda_bin = os.path.join(MINICONDA_PATH, "bin/conda")
     prompt("Create mailman3_core and mailman3_ext virtual environment")
     runCmd("%s create --name mailman3_core -y"%conda_bin)
-    runCmd("%s create --name mailman3_ext python=3 -y"%conda_bin)
+    runCmd("%s create --name mailman3_ext python=3.6 -y"%conda_bin)
 
     # python libs for core and ext
     prompt("Installing required python libs")
     pip_py3 = os.path.join(MINICONDA_PATH, "bin/pip")
-    pip_py2 = os.path.join(MINICONDA_PATH, "envs/mailman3_ext/bin/pip")
+    pip_pyext = os.path.join(MINICONDA_PATH, "envs/mailman3_ext/bin/pip")
     req_core = os.path.join(BASE_PATH, "misc/mailman3_core_requirements.txt")
     req_ext = os.path.join(BASE_PATH, "misc/mailman3_ext_requirements.txt")
     
     runCmd("%s install -r %s"%(pip_py3, req_core))
-    runCmd("%s install -r %s"%(pip_py2, req_ext))
+    runCmd("%s install -r %s"%(pip_pyext, req_ext))
 
 
     # Generate self sign certificate
@@ -125,13 +125,13 @@ def main():
      
     # Collect static
     prompt("Collecting static files for webui")
-    py2 = os.path.join(MINICONDA_PATH, "envs/mailman3_ext/bin/python")
+    pyext = os.path.join(MINICONDA_PATH, "envs/mailman3_ext/bin/python")
     webui_manage = os.path.join(BASE_PATH, "webui/manage.py")
-    runCmd("%s %s collectstatic --noinput"%(py2, webui_manage))
+    runCmd("%s %s collectstatic --noinput"%(pyext, webui_manage))
 
     # Migrating database
     prompt("Migrating mailman3 webui database")
-    runCmd("%s %s migrate"%(py2, webui_manage))
+    runCmd("%s %s migrate"%(pyext, webui_manage))
 
     # Installing init script
     prompt("Installing int script for mailman3 core and webui")
@@ -140,15 +140,19 @@ def main():
     for _init in inits:
         tgt = "/etc/init.d/%s"%_init
         if os.path.isfile(tgt):
-            continue
+            runCmd("rm %s"%(tgt))
         src = os.path.join(BASE_PATH, "misc/%s_init"%_init)
         runCmd("cp %s %s"%(src, tgt))
 
     webui_services_path = os.path.join(BASE_PATH, "etc/supervisor/services")
-    runCmd("cp %s/*.ini /etc/supervisord.d/"%(webui_services_path))
+    for srvfile in os.listdir(webui_services_path):
+        dst = "/etc/supervisord.d/%s"%(srvfile) 
+        if os.path.isfile(dst):
+            runCmd("rm %s"%(dst))
+        runCmd("cp %s/%s %s"%(webui_services_path, srvfile, dst))
 
     print("[DONE]")
-    cmd_admin = "%s %s createsuperuser"%(py2, webui_manage)
+    cmd_admin = "%s %s createsuperuser"%(pyext, webui_manage)
     print("""You may create admin user by running following command
 %s
 
